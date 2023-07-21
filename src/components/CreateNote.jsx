@@ -12,13 +12,21 @@ const CreateNote = () => {
     console.log(colorHex, title, description);
   };
 
+  const cancelHandle = () => {
+    setColorHex("#ffffff");
+    setTitle("");
+    setDescription("");
+    setOpen(false);
+  };
+
   return (
     <>
       <Modal
         title="Add Notes"
-        bodyStyle={{ width: "100%", background: `${colorHex}` }}
+        bodyStyle={{ width: "100%" }}
         open={open}
-        onCancel={() => setOpen(false)}
+        onCancel={cancelHandle}
+        okText="Add"
         onOk={submitHandle}
         centered
       >
