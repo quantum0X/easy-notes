@@ -10,6 +10,8 @@ const Notes = (props) => {
         width: "250px",
         height: "200px",
         margin: "10px",
+        overflow: "scroll",
+        padding: "0px",
       }}
     >
       <Meta title={props.title} description={props.description} />

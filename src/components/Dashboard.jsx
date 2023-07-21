@@ -2,13 +2,13 @@ import { Empty, Layout, Space, Typography } from "antd";
 import React, { useState } from "react";
 import Notes from "./Notes";
 import CreateNote from "./CreateNote";
+import { GithubOutlined } from "@ant-design/icons";
 
 const Dashboard = () => {
   const { Header, Content, Footer } = Layout;
   const [notes, setNotes] = useState([]);
 
   const createNote = (note) => {
-    console.log(note);
     setNotes((prevNote) => [...prevNote, note]);
   };
 
@@ -47,6 +47,7 @@ const Dashboard = () => {
             height: "100%",
             width: "100%",
             padding: "15px",
+            overflow: "hidden",
           }}
           wrap
         >
@@ -73,20 +74,41 @@ const Dashboard = () => {
           )}
         </Space>
       </Content>
-      <Footer style={{ background: "#212121" }}>
+      <Footer style={{ background: "#212121", height: "25vh" }}>
         <Space
           style={{
             display: "flex",
             justifyContent: "space-evenly",
+            alignItems: "center",
           }}
           align="center"
         >
           <Typography.Title style={{ color: "white" }}>
             Easy Notes
           </Typography.Title>
-          <Space>
-            <Typography.Title level={4}>My Profile</Typography.Title>
-            <Typography.Text>GitHub: </Typography.Text>
+          <Space direction="vertical">
+            <Typography.Title
+              style={{
+                color: "white",
+              }}
+              level={4}
+            >
+              My Profile
+            </Typography.Title>
+            <Typography.Text
+              style={{
+                color: "gray",
+              }}
+            >
+              <GithubOutlined /> GitHub:
+              <Typography.Link
+                href="https://github.com/quantum0X"
+                target="_blank"
+                style={{ color: "white", marginInline: "5px" }}
+              >
+                quantum0X
+              </Typography.Link>
+            </Typography.Text>
           </Space>
         </Space>
       </Footer>
