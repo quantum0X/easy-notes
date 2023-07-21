@@ -1,22 +1,33 @@
 import { Button, Form, Input, Modal, Row } from "antd";
 import React, { useState } from "react";
 
-const CreateNote = () => {
-  const [colorHex, setColorHex] = useState("#ffffff");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+const CreateNote = (props) => {
   const [open, setOpen] = useState(false);
+  const [notes, setNotes] = useState({
+    color: "#ffffff",
+    title: "",
+    description: "",
+  });
 
   const submitHandle = (e) => {
     e.preventDefault();
-    console.log(colorHex, title, description);
+    props.onChange(notes);
+    cancelHandle();
   };
 
   const cancelHandle = () => {
-    setColorHex("#ffffff");
-    setTitle("");
-    setDescription("");
+    setNotes({
+      color: "#ffffff",
+      title: "",
+      description: "",
+    });
     setOpen(false);
+  };
+
+  const onChangeHandle = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setNotes({ ...notes, [name]: value });
   };
 
   return (
@@ -38,25 +49,28 @@ const CreateNote = () => {
               margin: "5px",
               padding: "0px 1px",
             }}
+            name="color"
             type="color"
-            value={colorHex}
-            onChange={(e) => setColorHex(e.target.value)}
+            value={notes.color}
+            onChange={onChangeHandle}
           />
         </Row>
         <Form layout="vertical" style={{ textAlign: "center" }}>
           <Form.Item>
             <Input
+              name="title"
               placeholder="Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={notes.title}
+              onChange={onChangeHandle}
             />
           </Form.Item>
           <Form.Item>
             <Input
-              type="comment"
+              name="description"
+              type="textarea"
               placeholder="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={notes.description}
+              onChange={onChangeHandle}
             />
           </Form.Item>
         </Form>
