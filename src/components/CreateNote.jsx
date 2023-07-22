@@ -1,16 +1,30 @@
-import { Button, Form, Input, Modal, Row } from "antd";
+import { Button, Form, Input, notification, Modal, Row } from "antd";
 import React, { useState } from "react";
+
+const { TextArea } = Input;
 
 const CreateNote = (props) => {
   const [open, setOpen] = useState(false);
+  const [api, contextHolder] = notification.useNotification();
+
   const [notes, setNotes] = useState({
     color: "#ffffff",
     title: "",
     description: "",
   });
 
+  const openNotificationWithIcon = () => {
+    api["warning"]({
+      message: "Title may not be empty",
+    });
+  };
+
   const submitHandle = (e) => {
     e.preventDefault();
+    if (notes.title === "") {
+      openNotificationWithIcon();
+      return;
+    }
     props.onChange(notes);
     cancelHandle();
   };
@@ -32,6 +46,7 @@ const CreateNote = (props) => {
 
   return (
     <>
+      {contextHolder}
       <Modal
         title="Add Notes"
         bodyStyle={{ width: "100%" }}
@@ -53,6 +68,7 @@ const CreateNote = (props) => {
             type="color"
             value={notes.color}
             onChange={onChangeHandle}
+            required
           />
         </Row>
         <Form layout="vertical" style={{ textAlign: "center" }}>
@@ -62,15 +78,18 @@ const CreateNote = (props) => {
               placeholder="Title"
               value={notes.title}
               onChange={onChangeHandle}
+              maxLength={30}
+              showCount
             />
           </Form.Item>
           <Form.Item>
-            <Input
+            <TextArea
               name="description"
               type="textarea"
               placeholder="description"
               value={notes.description}
               onChange={onChangeHandle}
+              required
             />
           </Form.Item>
         </Form>
