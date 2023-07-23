@@ -1,3 +1,4 @@
+import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, notification, Modal, Row } from "antd";
 import React, { useState } from "react";
 
@@ -94,7 +95,9 @@ const CreateNote = (props) => {
           </Form.Item>
         </Form>
       </Modal>
-      <Button onClick={() => setOpen(true)}>Add Notes</Button>
+      <Button icon={<PlusOutlined />} onClick={() => setOpen(true)}>
+        Add Notes
+      </Button>
     </>
   );
 };
