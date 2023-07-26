@@ -1,10 +1,10 @@
+import { RouterProvider } from 'react-router-dom';
 import './App.css';
-import Dashboard from './components/Dashboard';
-
+import { router } from './router/PublicRoute'
 function App() {
   return (
     <div className="App">
-      <Dashboard />
+      <RouterProvider router={router} />
     </div>
   );
 }

@@ -1,16 +1,29 @@
 import { Empty, Layout, Space, Typography } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Notes from "./Notes";
 import CreateNote from "./CreateNote";
 import { GithubOutlined } from "@ant-design/icons";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 
 const Dashboard = () => {
   const { Header, Content, Footer } = Layout;
   const [notes, setNotes] = useState([]);
+  const dataRef = collection(db, "notes");
 
   const createNote = (note) => {
     setNotes((prevNote) => [...prevNote, note]);
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getDocs(dataRef);
+      // console.log();
+      setNotes(data.docs.map((docs) => ({ ...docs.data(), id: docs.id })));
+    };
+
+    getData();
+  });
 
   return (
     <Layout>
