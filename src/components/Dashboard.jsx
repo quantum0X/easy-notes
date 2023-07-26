@@ -23,7 +23,7 @@ const Dashboard = () => {
     };
 
     getData();
-  });
+  }, [dataRef]);
 
   return (
     <Layout>
