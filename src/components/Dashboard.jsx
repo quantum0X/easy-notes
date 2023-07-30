@@ -1,18 +1,48 @@
-import { Empty, Layout, Space, Typography } from "antd";
+import { Empty, Layout, Menu, Space, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import Notes from "./Notes";
 import CreateNote from "./CreateNote";
-import { GithubOutlined } from "@ant-design/icons";
+import {
+  GithubOutlined,
+  LogoutOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
 
+const items = [
+  {
+    label: `${auth.currentUser?.displayName}`,
+    key: "user",
+    children: [
+      {
+        icon: <UserOutlined />,
+        label: "Profile",
+        key: "profile",
+      },
+      {
+        icon: <SettingOutlined />,
+        label: "Setting",
+        key: "setting",
+      },
+
+      {
+        icon: <LogoutOutlined />,
+        label: "Log Out",
+        key: "logOut",
+      },
+    ],
+  },
+];
 const Dashboard = () => {
   const { Header, Content, Footer } = Layout;
   const [notes, setNotes] = useState([]);
   const dataRef = collection(db, "notes");
-  const { currentUser } = useAuth();
+  const { currentUser, signOutHandle } = useAuth();
   const navigate = useNavigate();
 
   const createNote = (note) => {
@@ -32,6 +62,12 @@ const Dashboard = () => {
   useEffect(() => {
     if (!currentUser) return navigate("/signup");
   });
+
+  const menuClickHandle = (e) => {
+    console.log(e);
+
+    if (e.key === "logOut") signOutHandle();
+  };
 
   return (
     <Layout>
@@ -57,6 +93,8 @@ const Dashboard = () => {
               Easy Notes
             </Typography.Title>
             {notes.length > 0 && <CreateNote onChange={createNote} />}
+            {/* Menu */}
+            <Menu onClick={menuClickHandle} mode="horizontal" items={items} />
           </Header>
 
           <Content

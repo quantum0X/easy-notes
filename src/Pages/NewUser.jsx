@@ -47,7 +47,7 @@ const NewUser = () => {
         backgroundSize: "cover",
       }}
     >
-      {currentUser && (
+      {!currentUser && (
         <Space
           style={{
             height: "50%",
