@@ -1,12 +1,35 @@
 import { Button, Form, Input, Space } from "antd";
 import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const NewUser = () => {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const { currentUser, signUpHandle } = useAuth();
+  const navigate = useNavigate();
 
-  const submitHandle = (e) => {
+  const submitHandle = async (e) => {
     e.preventDefault();
+
+    if (password.length < 6 || confirmPassword.length < 6) {
+      alert("<6");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert("no =");
+      return;
+    }
+
+    try {
+      const res = await signUpHandle(mail, password);
+      //   console.log(res);
+      if (currentUser) navigate("/");
+    } catch (err) {
+      console.error(err.code);
+    }
   };
   return (
     <div
@@ -52,8 +75,8 @@ const NewUser = () => {
             <Input
               type="password"
               placeholder="confirm password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </Form.Item>
           <Button onClick={submitHandle}>Log in</Button>
