@@ -24,9 +24,8 @@ const NewUser = () => {
     }
 
     try {
-      const res = await signUpHandle(mail, password);
-      //   console.log(res);
-      if (currentUser) navigate("/");
+      await signUpHandle(mail, password);
+      navigate("/");
     } catch (err) {
       console.error(err.code);
     }
