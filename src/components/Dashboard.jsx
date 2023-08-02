@@ -67,6 +67,7 @@ const Dashboard = () => {
     console.log(e);
 
     if (e.key === "logOut") signOutHandle();
+    else if (e.key === "profile") navigate("/profile");
   };
 
   return (
