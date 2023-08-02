@@ -2,6 +2,7 @@ import { Route, createBrowserRouter, createRoutesFromElements } from "react-rout
 import Dashboard from "../components/Dashboard";
 import NewUser from "../Pages/NewUser";
 import PrivateRoute from "./PrivateRoute";
+import Profile from "../Pages/Profile";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -11,6 +12,7 @@ const router = createBrowserRouter(
                 <Route path="/" element={<Dashboard />} exact />
             </Route>
             <Route path="/signup" element={<NewUser />} />
+            <Route path="/profile" element={<Profile />} />
         </Route>
     )
 )
