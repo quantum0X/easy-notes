@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../firebase";
 import {
   createUserWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
@@ -24,11 +25,14 @@ const AuthProvider = ({ children }) => {
 
   const signOutHandle = () => signOut(auth);
 
+  const checkMailHandle = (mail) => fetchSignInMethodsForEmail(auth, mail);
+
   const value = {
     currentUser,
     signUpHandle,
     signInHandle,
     signOutHandle,
+    checkMailHandle,
   };
 
   useEffect(() => {

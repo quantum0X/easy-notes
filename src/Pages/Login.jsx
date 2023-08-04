@@ -1,17 +1,67 @@
 import { Typography, Space, Image, Form, Input, Button } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
+const PasswordSection = (props) => {
+  const [password, setPassword] = useState("");
+  const { signInHandle } = useAuth();
+  const navigate = useNavigate();
+
+  const loginHandle = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await signInHandle(props.mail, password);
+      console.log(res);
+      console.log("user lgged in");
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  return (
+    <Space>
+      <Space>
+        <Typography.Title>password</Typography.Title>
+        <Input
+          placeholder="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button onClick={loginHandle}>Sign up</Button>
+      </Space>
+    </Space>
+  );
+};
 
 const Login = () => {
+  const [email, setEmail] = useState();
   const [loading, setLoading] = useState(false);
+  const [passwordSection, setPasswordSection] = useState(false);
   const navigate = useNavigate();
+  const { checkMailHandle } = useAuth();
   const navigateHandle = () => {
     navigate("/signup");
   };
 
-  const nextPageHandle = (e) => {
+  const nextPageHandle = async (e) => {
     e.preventDefault();
     setLoading(true);
+    try {
+      const res = await checkMailHandle(email);
+      console.log(res);
+      if (res.length) {
+        setPasswordSection("cliked");
+        console.log("chenged");
+      } else {
+        console.log("not username");
+      }
+
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
   };
   return (
     <Space
@@ -46,6 +96,8 @@ const Login = () => {
                 size="large"
                 style={{ width: "60%" }}
                 placeholder="Enter your mail"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </Form.Item>
             <Button
@@ -68,6 +120,7 @@ const Login = () => {
             <Typography.Text>Create new account &rarr;</Typography.Text>
             <Typography.Link onClick={navigateHandle}>Sign up</Typography.Link>
           </Space>
+          {/* <PasswordSection mail={email} /> */}
         </Space>
 
         <Image
