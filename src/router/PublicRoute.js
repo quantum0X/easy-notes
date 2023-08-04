@@ -9,7 +9,6 @@ const router = createBrowserRouter(
     createRoutesFromElements(
         <Route>
             <Route element={<PrivateRoute />}>
-
                 <Route path="/" element={<Dashboard />} exact />
             </Route>
             <Route path="/signup" element={<NewUser />} />

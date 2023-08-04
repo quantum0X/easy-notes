@@ -1,5 +1,5 @@
 import { Typography, Space, Image, Form, Input, Button, Row, Col } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { ArrowLeftOutlined, MinusOutlined } from "@ant-design/icons";
@@ -7,17 +7,20 @@ import { ArrowLeftOutlined, MinusOutlined } from "@ant-design/icons";
 const PasswordSection = (props) => {
   const [password, setPassword] = useState("");
   const { signInHandle } = useAuth();
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const loginHandle = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const res = await signInHandle(props.mail, password);
-      console.log(res);
-      console.log("user lgged in");
+      await signInHandle(props.mail, password);
+      setLoading(false);
       navigate("/");
     } catch (err) {
       console.log(err);
+      setLoading(false);
     }
   };
   return (
@@ -42,6 +45,7 @@ const PasswordSection = (props) => {
           },
         }}
         onClick={loginHandle}
+        loading={loading}
       >
         Sign up
       </Button>
@@ -60,7 +64,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [passwordSection, setPasswordSection] = useState(false);
   const navigate = useNavigate();
-  const { checkMailHandle } = useAuth();
+  const { checkMailHandle, currentUser } = useAuth();
+
   const navigateHandle = () => {
     navigate("/signup");
   };
@@ -69,14 +74,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await checkMailHandle(email);
-      console.log(res);
-      if (res.length) {
-        setPasswordSection("cliked");
-        console.log("chenged");
-      } else {
-        console.log("not username");
-      }
+      await checkMailHandle(email);
       setLoading(false);
       setPasswordSection(true);
     } catch (err) {
@@ -84,6 +82,11 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (currentUser) return navigate("/");
+  });
+
   return (
     <Space
       style={{

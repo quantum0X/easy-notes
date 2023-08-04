@@ -86,8 +86,13 @@ const NewUser = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </Form.Item>
-            <Button onClick={submitHandle}>Log in</Button>
+            <Button onClick={submitHandle}>Sign up</Button>
           </Form>
+
+          <Space>
+            Already account :
+            <Button onClick={() => navigate("/login")}>log in</Button>
+          </Space>
         </Space>
       )}
     </div>

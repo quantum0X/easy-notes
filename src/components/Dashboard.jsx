@@ -60,7 +60,7 @@ const Dashboard = () => {
   // }, []);
 
   useEffect(() => {
-    if (!currentUser) return navigate("/signup");
+    if (!currentUser) return navigate("/login");
   });
 
   const menuClickHandle = (e) => {
