@@ -1,7 +1,8 @@
-import { Typography, Space, Image, Form, Input, Button } from "antd";
+import { Typography, Space, Image, Form, Input, Button, Row, Col } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { ArrowLeftOutlined, MinusOutlined } from "@ant-design/icons";
 
 const PasswordSection = (props) => {
   const [password, setPassword] = useState("");
@@ -20,17 +21,37 @@ const PasswordSection = (props) => {
     }
   };
   return (
-    <Space>
-      <Space>
-        <Typography.Title>password</Typography.Title>
+    <>
+      <Form.Item>
         <Input
+          size="large"
+          style={{ width: "60%" }}
           placeholder="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button onClick={loginHandle}>Sign up</Button>
-      </Space>
-    </Space>
+      </Form.Item>
+      <Button
+        size="large"
+        style={{
+          background: "#dbc4f0",
+          fontWeight: "500",
+          "&::hover": {
+            color: "black",
+            background: "black",
+          },
+        }}
+        onClick={loginHandle}
+      >
+        Sign up
+      </Button>
+      <Row>
+        <Col span={2} offset={20}>
+          <MinusOutlined style={{ color: "gray", fontSize: "20px" }} />
+          <MinusOutlined style={{ color: "black", fontSize: "20px" }} />
+        </Col>
+      </Row>
+    </>
   );
 };
 
@@ -56,8 +77,8 @@ const Login = () => {
       } else {
         console.log("not username");
       }
-
       setLoading(false);
+      setPasswordSection(true);
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -80,7 +101,6 @@ const Login = () => {
         <Space
           direction="vertical"
           style={{ width: "40%", background: "#faf3f0" }}
-          block
         >
           <Typography.Title level={1} style={{ padding: "20px" }}>
             Beautify <br />
@@ -89,40 +109,78 @@ const Login = () => {
             in your Style
           </Typography.Title>
 
+          {/* login section */}
           <Form>
             <Typography.Title level={2}>Log in</Typography.Title>
-            <Form.Item>
-              <Input
-                size="large"
-                style={{ width: "60%" }}
-                placeholder="Enter your mail"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Form.Item>
-            <Button
-              size="large"
-              style={{
-                background: "#dbc4f0",
-                fontWeight: "500",
-                "&::hover": {
-                  color: "black",
-                  background: "black",
-                },
-              }}
-              loading={loading}
-              onClick={nextPageHandle}
-            >
-              Continue
-            </Button>
+            <Row>
+              <Col span={6} offset={3}>
+                {!passwordSection ? (
+                  <> </>
+                ) : (
+                  <Button
+                    icon={<ArrowLeftOutlined />}
+                    style={{
+                      marginBottom: "10px ",
+                    }}
+                    onClick={() => setPasswordSection(false)}
+                  ></Button>
+                )}
+              </Col>
+            </Row>
+
+            {!passwordSection ? (
+              <>
+                <Form.Item>
+                  <Input
+                    size="large"
+                    style={{ width: "60%", marginTop: "40px" }}
+                    placeholder="Enter your mail"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Form.Item>
+                <Button
+                  size="large"
+                  style={{
+                    width: "30%",
+                    background: "#dbc4f0",
+                    fontWeight: "500",
+                    "&::hover": {
+                      color: "black",
+                      background: "black",
+                    },
+                  }}
+                  loading={loading}
+                  onClick={nextPageHandle}
+                >
+                  Continue
+                </Button>
+                <Row>
+                  <Col span={2} offset={20}>
+                    <MinusOutlined
+                      style={{ color: "black", fontSize: "20px" }}
+                    />
+                    <MinusOutlined
+                      style={{ color: "gray", fontSize: "20px" }}
+                    />
+                  </Col>
+                </Row>
+              </>
+            ) : (
+              <PasswordSection mail={email} />
+            )}
           </Form>
-          <Space>
+          <Space
+            style={{
+              marginTop: "20px",
+            }}
+          >
             <Typography.Text>Create new account &rarr;</Typography.Text>
             <Typography.Link onClick={navigateHandle}>Sign up</Typography.Link>
           </Space>
-          {/* <PasswordSection mail={email} /> */}
         </Space>
 
+        {/* right section */}
         <Image
           height={"100%"}
           src={process.env.PUBLIC_URL + "img/NotesLandingImg.png"}
