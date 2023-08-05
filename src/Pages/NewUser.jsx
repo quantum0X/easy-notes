@@ -1,14 +1,21 @@
-import { Button, Form, Input, Space } from "antd";
+import { Button, Form, Image, Input, Space, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { MailOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
+import { db } from "../firebase";
+import { collection } from "firebase/firestore";
 
 const NewUser = () => {
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { currentUser, signUpHandle } = useAuth();
   const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const dataRef = collection(db, "notes");
 
   const submitHandle = async (e) => {
     e.preventDefault();
@@ -35,6 +42,16 @@ const NewUser = () => {
     if (currentUser) return navigate("/");
   });
 
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     const data = await getDocs(dataRef);
+  //     // console.log();
+  //     setNotes(data.docs.map((docs) => ({ ...docs.data(), id: docs.id })));
+  //   };
+
+  //   getData();
+  // }, []);
+
   return (
     <div
       style={{
@@ -48,22 +65,51 @@ const NewUser = () => {
       }}
     >
       {!currentUser && (
-        <Space
+        <div
           style={{
-            height: "50%",
-            width: "50%",
-            backgroundImage: `url(${
-              process.env.PUBLIC_URL + "/img/img-1.png"
-            })`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backdropFilter: "blur(8px)",
+            display: "flex",
+            height: "70vh",
+            width: "80vw",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          {/* <Image src={BackImage} alt="img" /> */}
-          <Form>
+          <Image
+            height={"100%"}
+            width="fit-content"
+            src={process.env.PUBLIC_URL + "/img/signupImg.jpg"}
+            alt="img"
+          />
+          <Form
+            style={{
+              width: "30%",
+              height: "100%",
+              background: "brown",
+              padding: "20px",
+            }}
+            form={form}
+          >
             <Form.Item>
               <Input
+                prefix={<UserOutlined />}
+                style={{ width: "50%" }}
+                placeholder="First Name"
+                value={firstname}
+                onChange={(e) => setFirstname(e.target.value)}
+              />
+              <Input
+                prefix={<UserOutlined />}
+                style={{ width: "50%" }}
+                placeholder="Last Name"
+                value={lastname}
+                onChange={(e) => setLastname(e.target.value)}
+              />
+            </Form.Item>
+            <Form.Item
+              rules={[{ required: true, message: "please enter mail" }]}
+            >
+              <Input
+                prefix={<MailOutlined />}
                 type="text"
                 placeholder="Email Address"
                 value={mail}
@@ -72,6 +118,7 @@ const NewUser = () => {
             </Form.Item>
             <Form.Item>
               <Input
+                prefix={<LockOutlined />}
                 type="password"
                 placeholder="password"
                 value={password}
@@ -80,6 +127,7 @@ const NewUser = () => {
             </Form.Item>
             <Form.Item>
               <Input
+                prefix={<LockOutlined />}
                 type="password"
                 placeholder="confirm password"
                 value={confirmPassword}
@@ -87,13 +135,15 @@ const NewUser = () => {
               />
             </Form.Item>
             <Button onClick={submitHandle}>Sign up</Button>
-          </Form>
 
-          <Space>
-            Already account :
-            <Button onClick={() => navigate("/login")}>log in</Button>
-          </Space>
-        </Space>
+            <div>
+              <Typography.Text level={4}>Already account:</Typography.Text>
+              <Typography.Link onClick={() => navigate("/login")}>
+                log in
+              </Typography.Link>
+            </div>
+          </Form>
+        </div>
       )}
     </div>
   );
