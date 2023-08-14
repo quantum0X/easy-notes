@@ -45,7 +45,10 @@ const NewUser = () => {
   const submitHandle = async (e) => {
     e.preventDefault();
 
-    if (password.length < 6 || confirmPassword.length < 6) {
+    if (mail === "") {
+      openNotificationWithIcon("warning", "please enter mail");
+      return;
+    } else if (password.length < 6 || confirmPassword.length < 6) {
       openNotificationWithIcon("warning", "password greater than 6");
       return;
     }

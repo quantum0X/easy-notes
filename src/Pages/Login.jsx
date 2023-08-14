@@ -80,7 +80,7 @@ const PasswordSection = (props) => {
         onClick={loginHandle}
         loading={loading}
       >
-        Sign up
+        log in
       </Button>
       <div
         style={{
