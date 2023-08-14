@@ -1,4 +1,14 @@
-import { Typography, Space, Image, Form, Input, Button, Row, Col } from "antd";
+import {
+  Typography,
+  Space,
+  Image,
+  Form,
+  Input,
+  Button,
+  Row,
+  Col,
+  message,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -11,8 +21,29 @@ const PasswordSection = (props) => {
 
   const navigate = useNavigate();
 
+  // notification
+  const [api, contextHolder] = message.useMessage();
+  const openNotificationWithIcon = (type, message) => {
+    api.open({
+      type: type,
+      content: message,
+    });
+  };
+
+  // firebase error handle
+  const firebaseErrorHandler = (err) => {
+    if (err.code === "auth/wrong-password")
+      openNotificationWithIcon("error", "Wrong password");
+    else if (err.code === "auth/too-many-requests")
+      openNotificationWithIcon("error", "Too many attempts.Please try later");
+  };
+
   const loginHandle = async (e) => {
     e.preventDefault();
+    if (password === "") {
+      openNotificationWithIcon("warning", "Enter your password");
+      return;
+    }
     setLoading(true);
     try {
       await signInHandle(props.mail, password);
@@ -21,12 +52,14 @@ const PasswordSection = (props) => {
     } catch (err) {
       console.log(err);
       setLoading(false);
+      firebaseErrorHandler(err);
     }
   };
   return (
     <>
+      {contextHolder}
       <Form.Item>
-        <Input
+        <Input.Password
           size="large"
           style={{ width: "60%" }}
           placeholder="password"
@@ -49,16 +82,28 @@ const PasswordSection = (props) => {
       >
         Sign up
       </Button>
-      <Row>
-        <Col span={2} offset={20}>
-          <MinusOutlined style={{ color: "gray", fontSize: "20px" }} />
-          <MinusOutlined style={{ color: "black", fontSize: "20px" }} />
-        </Col>
-      </Row>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "end",
+        }}
+      >
+        <MinusOutlined
+          style={{
+            color: "gray",
+            fontSize: "20px",
+          }}
+        />
+        <MinusOutlined
+          style={{ color: "black", fontSize: "20px", marginRight: "2rem" }}
+        />
+      </div>
     </>
   );
 };
 
+// main login page
 const Login = () => {
   const [email, setEmail] = useState();
   const [loading, setLoading] = useState(false);
@@ -66,20 +111,46 @@ const Login = () => {
   const navigate = useNavigate();
   const { checkMailHandle, currentUser } = useAuth();
 
+  // notification
+  const [api, contextHolder] = message.useMessage();
+  const openNotificationWithIcon = (type, message) => {
+    api.open({
+      type: type,
+      content: message,
+    });
+  };
+
+  // firebase error handle
+  const firebaseErrorHandler = (err) => {
+    if (err.code === "auth/invalid-email")
+      openNotificationWithIcon("error", "Invalid email");
+    else if (err.code === "auth/missing-identifier")
+      openNotificationWithIcon("error", "Please enter mail");
+  };
+
   const navigateHandle = () => {
     navigate("/signup");
   };
 
   const nextPageHandle = async (e) => {
     e.preventDefault();
+    if (email === "") {
+      openNotificationWithIcon("warning", "Please enter your mail");
+      return;
+    }
     setLoading(true);
     try {
-      await checkMailHandle(email);
+      const res = await checkMailHandle(email);
       setLoading(false);
+      if (!res.length) {
+        openNotificationWithIcon("error", "No user found!");
+        return;
+      }
       setPasswordSection(true);
     } catch (err) {
       console.log(err);
       setLoading(false);
+      firebaseErrorHandler(err);
     }
   };
 
@@ -93,6 +164,7 @@ const Login = () => {
         height: "100vh",
       }}
     >
+      {contextHolder}
       <div
         style={{
           height: "70vh",
@@ -145,7 +217,7 @@ const Login = () => {
                 <Button
                   size="large"
                   style={{
-                    width: "30%",
+                    width: "40%",
                     background: "#dbc4f0",
                     fontWeight: "500",
                     "&::hover": {
@@ -158,16 +230,22 @@ const Login = () => {
                 >
                   Continue
                 </Button>
-                <Row>
-                  <Col span={2} offset={20}>
-                    <MinusOutlined
-                      style={{ color: "black", fontSize: "20px" }}
-                    />
-                    <MinusOutlined
-                      style={{ color: "gray", fontSize: "20px" }}
-                    />
-                  </Col>
-                </Row>
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "end",
+                  }}
+                >
+                  <MinusOutlined style={{ color: "black", fontSize: "20px" }} />
+                  <MinusOutlined
+                    style={{
+                      color: "gray",
+                      fontSize: "20px",
+                      marginRight: "2rem",
+                    }}
+                  />
+                </div>
               </>
             ) : (
               <PasswordSection mail={email} />
@@ -175,7 +253,7 @@ const Login = () => {
           </Form>
           <Space
             style={{
-              marginTop: "20px",
+              marginTop: "10px",
             }}
           >
             <Typography.Text>Create new account &rarr;</Typography.Text>
