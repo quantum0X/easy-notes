@@ -16,7 +16,7 @@ import { auth } from "../firebase";
 
 const items = [
   {
-    label: `${auth.currentUser?.displayName}`,
+    label: `${auth?.currentUser?.displayName}`,
     key: "user",
     children: [
       {
@@ -41,23 +41,23 @@ const items = [
 const Dashboard = () => {
   const { Header, Content, Footer } = Layout;
   const [notes, setNotes] = useState([]);
-  const dataRef = collection(db, "notes");
   const { currentUser, signOutHandle } = useAuth();
+  const dataRef = collection(db, "notes");
   const navigate = useNavigate();
 
   const createNote = (note) => {
-    setNotes((prevNote) => [...prevNote, note]);
+    // setNotes((prevNote) => [...prevNote, note]);
   };
 
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     const data = await getDocs(dataRef);
-  //     // console.log();
-  //     setNotes(data.docs.map((docs) => ({ ...docs.data(), id: docs.id })));
-  //   };
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getDocs(dataRef);
+      // console.log();
+      setNotes(data.docs.map((docs) => ({ ...docs.data(), id: docs.id })));
+    };
 
-  //   getData();
-  // }, []);
+    getData();
+  }, [dataRef]);
 
   useEffect(() => {
     if (!currentUser) return navigate("/login");
@@ -98,6 +98,7 @@ const Dashboard = () => {
             <Menu onClick={menuClickHandle} mode="horizontal" items={items} />
           </Header>
 
+          {/* content section */}
           <Content
             style={{
               height: "90vh",

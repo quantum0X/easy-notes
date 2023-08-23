@@ -1,8 +1,8 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, notification, Modal, Row } from "antd";
 import React, { useState } from "react";
-import { getDocs, collection, addDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { auth, db } from "../firebase";
 
 const { TextArea } = Input;
 
@@ -12,9 +12,11 @@ const CreateNote = (props) => {
   const dbRef = collection(db, "notes");
 
   const [notes, setNotes] = useState({
-    color: "#ffffff",
+    userID: auth.currentUser.uid,
+    createdTime: "",
     title: "",
     description: "",
+    color: "#ffffff",
   });
 
   const openNotificationWithIcon = () => {
@@ -29,8 +31,8 @@ const CreateNote = (props) => {
       openNotificationWithIcon();
       return;
     }
-    props.onChange(notes);
-    addDoc(dbRef, notes)
+    // props.onChange(notes);
+    addDoc(dbRef, { ...notes, createdTime: serverTimestamp() })
       .then((res) => {
         console.log(res);
       })
