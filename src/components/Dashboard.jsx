@@ -45,19 +45,14 @@ const Dashboard = () => {
   const dataRef = collection(db, "notes");
   const navigate = useNavigate();
 
-  const createNote = (note) => {
-    // setNotes((prevNote) => [...prevNote, note]);
-  };
-
   useEffect(() => {
     const getData = async () => {
       const data = await getDocs(dataRef);
-      // console.log();
       setNotes(data.docs.map((docs) => ({ ...docs.data(), id: docs.id })));
     };
 
     getData();
-  }, [dataRef]);
+  }, []);
 
   useEffect(() => {
     if (!currentUser) return navigate("/login");
@@ -93,7 +88,7 @@ const Dashboard = () => {
             >
               Easy Notes
             </Typography.Title>
-            {notes.length > 0 && <CreateNote onChange={createNote} />}
+            {notes.length > 0 && <CreateNote />}
             {/* Menu */}
             <Menu onClick={menuClickHandle} mode="horizontal" items={items} />
           </Header>
@@ -101,10 +96,9 @@ const Dashboard = () => {
           {/* content section */}
           <Content
             style={{
-              height: "90vh",
+              minHeight: "90vh",
               marginTop: "60px",
               width: "100wv",
-              overflow: "scroll",
             }}
           >
             <Space
@@ -114,6 +108,9 @@ const Dashboard = () => {
                 width: "100%",
                 padding: "15px",
                 overflow: "hidden",
+                display: "flex",
+                justifyContent: "center",
+                flexWrap: "wrap",
               }}
               wrap
             >
@@ -121,9 +118,11 @@ const Dashboard = () => {
                 notes.map((note, idx) => (
                   <Notes
                     key={idx}
-                    color={note.color}
-                    title={note.title}
-                    description={note.description}
+                    props={note}
+                    // color={note.color}
+                    // title={note.title}
+                    // description={note.description}
+                    // createdTime={note.createdTime}
                   />
                 ))
               ) : (
@@ -135,7 +134,7 @@ const Dashboard = () => {
                     margin: "auto",
                   }}
                 >
-                  <CreateNote onChange={createNote} />
+                  <CreateNote />
                 </Empty>
               )}
             </Space>

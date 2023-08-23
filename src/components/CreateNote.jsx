@@ -34,7 +34,7 @@ const CreateNote = (props) => {
     // props.onChange(notes);
     addDoc(dbRef, { ...notes, createdTime: serverTimestamp() })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
       })
       .catch((err) => {
         console.log(err);

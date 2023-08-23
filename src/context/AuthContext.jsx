@@ -14,7 +14,7 @@ const useAuth = () => useContext(authContext);
 
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState();
-  console.log(currentUser);
+  // console.log(currentUser);
   const [loading, setLoading] = useState(true);
 
   const signUpHandle = (email, password) =>

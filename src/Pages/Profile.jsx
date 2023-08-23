@@ -1,6 +1,7 @@
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Divider, Form, Image, Input, Space, Upload, message } from "antd";
 import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -19,10 +20,12 @@ const beforeUpload = (file) => {
   }
   return isJpgOrPng && isLt2M;
 };
+
 const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
 
+  const { currentUser } = useAuth();
   const handleChange = (info) => {
     if (info.file.status === "uploading") {
       setLoading(true);
@@ -58,6 +61,7 @@ const Profile = () => {
         alignItems: "center",
       }}
     >
+      created at: {currentUser.metadata.creationTime}
       <Space direction="vertical">
         <Space>
           <Image />
