@@ -52,7 +52,7 @@ const Dashboard = () => {
     };
 
     getData();
-  }, []);
+  }, [notes]);
 
   useEffect(() => {
     if (!currentUser) return navigate("/login");
